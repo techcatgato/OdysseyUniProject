@@ -42,8 +42,8 @@ public final class Adventure {
 
         System.out.println();
         switch (state) {
-            case WON -> System.out.println("FIVE-STAR REVIEWS! The busy hour is handled and the critic leaves five stars.");
-            case LOST -> System.out.println("CLOSED DOWN! The pizzeria is shut for a safety inspection.");
+            case WON -> System.out.println("The busy hour is handled and the critic leaves five stars.");
+            case LOST -> System.out.println("The pizzeria is shut down due to safety violations.");
             default -> System.out.println("The shift ended early.");
         }
         return state;
@@ -69,7 +69,7 @@ public final class Adventure {
     void promptForReward() {
         requireState(State.REWARD_PENDING);
         System.out.println();
-        System.out.println("Service survived! Mario treats himself to one reward:");
+        System.out.println("Battle won, choose a reward:");
         for (Reward r : Reward.values()) {
             System.out.println(r.menuNumber() + ") " + r.displayName() + ": " + r.description());
         }
@@ -78,13 +78,13 @@ public final class Adventure {
             System.out.print("Choose reward: ");
             if (!in.hasNextLine()) {
                 System.out.println();
-                System.out.println("No more orders. Shift abandoned.");
+                System.out.println("bro ran away");
                 state = State.ABANDONED;
                 return;
             }
             Reward choice = Reward.fromMenuNumber(ConsoleChoice.read(in, 1, Reward.values().length));
             if (choice == null) {
-                System.out.println("That reward isn't on the menu. Nothing changed; enter 1 or 2.");
+                System.out.println("That reward isn't on the menu brother. enter 1 or 2.");
                 continue;
             }
             claimReward(choice);

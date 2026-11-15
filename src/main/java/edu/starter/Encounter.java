@@ -29,7 +29,7 @@ public class Encounter {
     /** @post returns WIN only if the enemy is at 0 HP and the player is alive; RUN if input ran out */
     public Result run() {
         player.removeProtection();
-        System.out.println(enemy.getName() + " walks through the door!");
+        System.out.println(enemy.getName() + " breaks the door!");
 
         while (!isOver()) {
             System.out.println();
@@ -39,12 +39,12 @@ public class Encounter {
             printMenu();
 
             if (!in.hasNextLine()) {
-                System.out.println("No more orders. Shift abandoned.");
+                System.out.println("bro ran away");
                 return Result.RUN;
             }
             int choice = ConsoleChoice.read(in, ATTACK, RECOVER);
             if (choice == -1) {
-                System.out.println("That's not on the menu. Enter a number from " + ATTACK + " to " + RECOVER + ".");
+                System.out.println("That's not on the menu brother. Enter a number from " + ATTACK + " to " + RECOVER + ".");
                 continue;
             }
 
