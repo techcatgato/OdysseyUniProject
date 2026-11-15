@@ -75,7 +75,7 @@ public final class Adventure {
         }
 
         while (!rewardClaimed) {
-            System.out.print("Choose reward: ");
+            System.out.print("Choose one: ");
             if (!in.hasNextLine()) {
                 System.out.println();
                 System.out.println("bro ran away");
@@ -88,7 +88,7 @@ public final class Adventure {
                 continue;
             }
             claimReward(choice);
-            System.out.println("You chose " + choice.displayName() + " (" + choice + "). " + player);
+            System.out.println("Mario takes the " + choice.displayName() + " (" + choice + "). " + player);
         }
         state = State.SECOND_ENCOUNTER;
     }

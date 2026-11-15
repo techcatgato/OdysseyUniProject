@@ -75,28 +75,28 @@ public class Encounter {
         switch (choice) {
             case ATTACK -> {
                 player.attack(enemy);
-                System.out.println("You smack them with your rolling pin! " + enemy.getName() + " HP is now " + enemy.getHp() + ".");
+                System.out.println("Mario beats them with the rolling pin! " + enemy.getName() + " HP is now " + enemy.getHp() + ".");
                 return true;
             }
             case DEFEND -> {
                 player.protect();
-                System.out.println("You raise your cutting board.");
+                System.out.println("Mario uses the cutting board as a shield.");
                 return true;
             }
             case SPECIAL -> {
                 if (!player.special(enemy)) {
-                    System.out.println("Not enough " + Constants.RESOURCE_NAME + " to throw a pizza (need " + player.getSpecialCost() + ", have " + player.getResource() + ").");
+                    System.out.println("Not enough " + Constants.RESOURCE_NAME + " to throw a pizza brother (need " + player.getSpecialCost() + ", have " + player.getResource() + ").");
                     return false;
                 }
-                System.out.println("You throw a hot pizza! " + enemy.getName() + " HP is now " + enemy.getHp() + ".");
+                System.out.println("Mario throws a flaming hot pizza! " + enemy.getName() + " HP is now " + enemy.getHp() + ".");
                 return true;
             }
             case RECOVER -> {
                 if (!player.recover()) {
-                    System.out.println("Your " + Constants.RESOURCE_NAME + " is already at max (" + player.getMaxResource() + ").");
+                    System.out.println("Mario isn't hungry brother (" + Constants.RESOURCE_NAME + " is already at max " + player.getMaxResource() + ").");
                     return false;
                 }
-                System.out.println("You eat a slice. " + Constants.RESOURCE_NAME + " is now " + player.getResource() + ".");
+                System.out.println("Mario eats a slice from a customer. " + Constants.RESOURCE_NAME + " is now " + player.getResource() + ".");
                 return true;
             }
             default -> {
@@ -107,16 +107,16 @@ public class Encounter {
 
     private void enemyTurn() {
         enemy.counterAttack(player);
-        System.out.println(enemy.getName() + " piles on the pressure! " + player.getName() + " HP is now " + player.getHp() + ".");
+        System.out.println(enemy.getName() + " doesn't like Mario's service! " + player.getName() + " HP is now " + player.getHp() + ".");
     }
 
     private Result printResult() {
         System.out.println();
         if (player.isAlive()) {
-            System.out.println("You win! " + enemy.getName() + " is satisfied.");
+            System.out.println("W. " + enemy.getName() + " is handled.");
             return Result.WIN;
         }
-        System.out.println("You lose! " + player.getName() + " has collapsed.");
+        System.out.println(player.getName() + " experienced cardiac arrest.");
         return Result.LOSE;
     }
 
