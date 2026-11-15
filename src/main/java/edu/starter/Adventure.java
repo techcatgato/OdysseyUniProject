@@ -69,7 +69,7 @@ public final class Adventure {
     void promptForReward() {
         requireState(State.REWARD_PENDING);
         System.out.println();
-        System.out.println("Service survived! The owner offers you one reward:");
+        System.out.println("Service survived! Mario treats himself to one reward:");
         for (Reward r : Reward.values()) {
             System.out.println(r.menuNumber() + ") " + r.displayName() + ": " + r.description());
         }
