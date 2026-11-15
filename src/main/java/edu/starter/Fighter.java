@@ -135,7 +135,7 @@ public class Fighter {
 
     @Override
     public String toString() {
-        return name + " [HP " + hp + "/" + maxHp + ", Resource " + resource + "/" + maxResource
+        return name + " [HP " + hp + "/" + maxHp + ", " + Constants.RESOURCE_NAME + " " + resource + "/" + maxResource
                 + ", Attack " + attackDamage + (defended ? ", defending" : "") + "]";
     }
 

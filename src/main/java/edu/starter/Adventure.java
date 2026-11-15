@@ -42,9 +42,9 @@ public final class Adventure {
 
         System.out.println();
         switch (state) {
-            case WON -> System.out.println("ADVENTURE WON! Both enemies defeated.");
-            case LOST -> System.out.println("ADVENTURE LOST.");
-            default -> System.out.println("Adventure ended early.");
+            case WON -> System.out.println("FIVE-STAR REVIEWS! The busy hour is handled and the critic leaves five stars.");
+            case LOST -> System.out.println("CLOSED DOWN! The pizzeria is shut for a safety inspection.");
+            default -> System.out.println("The shift ended early.");
         }
         return state;
     }
@@ -52,7 +52,7 @@ public final class Adventure {
     /** @pre state == FIRST_ENCOUNTER @post state is REWARD_PENDING, LOST or ABANDONED */
     void playFirstEncounter() {
         requireState(State.FIRST_ENCOUNTER);
-        System.out.println("=== Encounter 1 ===");
+        System.out.println("=== Encounter 1: " + Constants.ENEMY_1_NAME + " ===");
         Fighter enemy = newEnemy(Constants.ENEMY_1_NAME, Constants.ENEMY_1_HP);
         state = switch (new Encounter(player, enemy, in).run()) {
             case WIN -> State.REWARD_PENDING;
@@ -69,26 +69,26 @@ public final class Adventure {
     void promptForReward() {
         requireState(State.REWARD_PENDING);
         System.out.println();
-        System.out.println("You earned a reward! Choose one:");
+        System.out.println("Service survived! The owner offers you one reward:");
         for (Reward r : Reward.values()) {
-            System.out.println(r.menuNumber() + ") " + r.description());
+            System.out.println(r.menuNumber() + ") " + r.displayName() + ": " + r.description());
         }
 
         while (!rewardClaimed) {
             System.out.print("Choose reward: ");
             if (!in.hasNextLine()) {
                 System.out.println();
-                System.out.println("No more input. Adventure abandoned.");
+                System.out.println("No more orders. Shift abandoned.");
                 state = State.ABANDONED;
                 return;
             }
             Reward choice = Reward.fromMenuNumber(ConsoleChoice.read(in, 1, Reward.values().length));
             if (choice == null) {
-                System.out.println("Invalid reward choice. Nothing changed; enter 1 or 2.");
+                System.out.println("That reward isn't on the menu. Nothing changed; enter 1 or 2.");
                 continue;
             }
             claimReward(choice);
-            System.out.println("You chose " + choice + ". " + player);
+            System.out.println("You chose " + choice.displayName() + " (" + choice + "). " + player);
         }
         state = State.SECOND_ENCOUNTER;
     }
@@ -112,7 +112,7 @@ public final class Adventure {
     void playSecondEncounter() {
         requireState(State.SECOND_ENCOUNTER);
         System.out.println();
-        System.out.println("=== Encounter 2 ===");
+        System.out.println("=== Encounter 2: " + Constants.ENEMY_2_NAME + " ===");
         Fighter enemy = newEnemy(Constants.ENEMY_2_NAME, Constants.ENEMY_2_HP); // fresh, independent object
         state = switch (new Encounter(player, enemy, in).run()) {
             case WIN -> State.WON;

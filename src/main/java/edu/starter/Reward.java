@@ -2,19 +2,25 @@ package edu.starter;
 
 /** The two rewards offered between Encounter 1 and Encounter 2. */
 public enum Reward {
-    RECOVERY(1, "Recovery: restore " + Constants.RECOVERY_REWARD_HP + " HP (max " + Constants.playerMaxHp + ")"),
-    POWER(2, "Power: +" + Constants.POWER_REWARD_ATTACK + " basic Attack (Special stays " + Constants.playerSpecialDamage + ")");
+    RECOVERY(1, "Crispy Pizza", "restore " + Constants.RECOVERY_REWARD_HP + " HP (max " + Constants.playerMaxHp + ")"),
+    POWER(2, "Heavier Pin", "+" + Constants.POWER_REWARD_ATTACK + " Rolling Pin Smack damage (Pizza Throw stays " + Constants.playerSpecialDamage + ")");
 
     private final int menuNumber;
+    private final String displayName;
     private final String description;
 
-    Reward(int menuNumber, String description) {
+    Reward(int menuNumber, String displayName, String description) {
         this.menuNumber = menuNumber;
+        this.displayName = displayName;
         this.description = description;
     }
 
     public int menuNumber() {
         return menuNumber;
+    }
+
+    public String displayName() {
+        return displayName;
     }
 
     public String description() {

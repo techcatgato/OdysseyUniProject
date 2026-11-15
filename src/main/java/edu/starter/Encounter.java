@@ -29,7 +29,7 @@ public class Encounter {
     /** @post returns WIN only if the enemy is at 0 HP and the player is alive; RUN if input ran out */
     public Result run() {
         player.removeProtection();
-        System.out.println("A wild " + enemy.getName() + " appears!");
+        System.out.println(enemy.getName() + " walks through the door!");
 
         while (!isOver()) {
             System.out.println();
@@ -39,12 +39,12 @@ public class Encounter {
             printMenu();
 
             if (!in.hasNextLine()) {
-                System.out.println("No more input. Fight abandoned.");
+                System.out.println("No more orders. Shift abandoned.");
                 return Result.RUN;
             }
             int choice = ConsoleChoice.read(in, ATTACK, RECOVER);
             if (choice == -1) {
-                System.out.println("Invalid choice. Enter a number from " + ATTACK + " to " + RECOVER + ".");
+                System.out.println("That's not on the menu. Enter a number from " + ATTACK + " to " + RECOVER + ".");
                 continue;
             }
 
@@ -64,10 +64,10 @@ public class Encounter {
     }
 
     private void printMenu() {
-        System.out.println(ATTACK + ") Attack  (" + player.getAttackDamage() + " damage)");
-        System.out.println(DEFEND + ") Defend  (prevent 5 damage from next hit)");
-        System.out.println(SPECIAL + ") Special (" + player.getSpecialDamage() + " damage, costs " + player.getSpecialCost() + " resource)");
-        System.out.println(RECOVER + ") Recover (+" + player.getRecoverAmount() + " resource, max " + player.getMaxResource() + ")");
+        System.out.println(ATTACK + ") Rolling Pin Smack   (" + player.getAttackDamage() + " damage)");
+        System.out.println(DEFEND + ") Cutting Board Block (block " + Constants.DEFENSE_REDUCTION + " damage from the next hit)");
+        System.out.println(SPECIAL + ") Pizza Throw         (" + player.getSpecialDamage() + " damage, costs " + player.getSpecialCost() + " " + Constants.RESOURCE_NAME + ")");
+        System.out.println(RECOVER + ") Eat a Slice         (+" + player.getRecoverAmount() + " " + Constants.RESOURCE_NAME + ", max " + player.getMaxResource() + ")");
         System.out.print("Choose: ");
     }
 
@@ -75,28 +75,28 @@ public class Encounter {
         switch (choice) {
             case ATTACK -> {
                 player.attack(enemy);
-                System.out.println("You attack! " + enemy.getName() + " HP is now " + enemy.getHp() + ".");
+                System.out.println("You smack them with your rolling pin! " + enemy.getName() + " HP is now " + enemy.getHp() + ".");
                 return true;
             }
             case DEFEND -> {
                 player.protect();
-                System.out.println("You raise your guard.");
+                System.out.println("You raise your cutting board.");
                 return true;
             }
             case SPECIAL -> {
                 if (!player.special(enemy)) {
-                    System.out.println("Not enough resource for Special (need " + player.getSpecialCost() + ", have " + player.getResource() + ").");
+                    System.out.println("Not enough " + Constants.RESOURCE_NAME + " to throw a pizza (need " + player.getSpecialCost() + ", have " + player.getResource() + ").");
                     return false;
                 }
-                System.out.println("Special attack! " + enemy.getName() + " HP is now " + enemy.getHp() + ".");
+                System.out.println("You throw a hot pizza! " + enemy.getName() + " HP is now " + enemy.getHp() + ".");
                 return true;
             }
             case RECOVER -> {
                 if (!player.recover()) {
-                    System.out.println("Resource is already at max (" + player.getMaxResource() + ").");
+                    System.out.println("Your " + Constants.RESOURCE_NAME + " is already at max (" + player.getMaxResource() + ").");
                     return false;
                 }
-                System.out.println("You recover. Resource is now " + player.getResource() + ".");
+                System.out.println("You eat a slice. " + Constants.RESOURCE_NAME + " is now " + player.getResource() + ".");
                 return true;
             }
             default -> {
@@ -107,16 +107,16 @@ public class Encounter {
 
     private void enemyTurn() {
         enemy.counterAttack(player);
-        System.out.println(enemy.getName() + " counterattacks! " + player.getName() + " HP is now " + player.getHp() + ".");
+        System.out.println(enemy.getName() + " piles on the pressure! " + player.getName() + " HP is now " + player.getHp() + ".");
     }
 
     private Result printResult() {
         System.out.println();
         if (player.isAlive()) {
-            System.out.println("You win! " + enemy.getName() + " is defeated.");
+            System.out.println("You win! " + enemy.getName() + " is satisfied.");
             return Result.WIN;
         }
-        System.out.println("You lose! " + player.getName() + " has fallen.");
+        System.out.println("You lose! " + player.getName() + " has collapsed.");
         return Result.LOSE;
     }
 
