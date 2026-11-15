@@ -15,4 +15,7 @@ public class Constants {
     public static final int ENEMY_1_HP = 30;
     public static final String ENEMY_2_NAME = "enemy 2";
     public static final int ENEMY_2_HP = 45;
+
+    public static final int RECOVERY_REWARD_HP = 25;
+    public static final int POWER_REWARD_ATTACK = 2;
 }

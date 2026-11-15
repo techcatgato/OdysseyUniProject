@@ -43,6 +43,29 @@ public class Fighter {
         this.hp = Math.clamp(hp, 0, maxHp);
     }
 
+    /**
+     * 
+     * @pre healing>0
+     * @post hp == Math.min(maxHp, oldHp+healing)
+     */
+
+    public void heal(int healing) {
+        if (healing <= 0) throw new IllegalArgumentException("healing must be positive");
+
+        setHp(hp+healing);
+    }
+
+    /**
+     * 
+     * @pre increase > 0
+     * @post attackDamage == oldAttackDamage+increase
+     */
+    public void increaseAttackDamage(int increase) {
+        if (increase <= 0) throw new IllegalArgumentException("attack can only increase");
+
+        attackDamage += increase;
+    }
+
     public int getResource() {
         return resource;
     }

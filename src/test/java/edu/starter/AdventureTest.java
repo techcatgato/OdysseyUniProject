@@ -28,6 +28,12 @@ public class AdventureTest {
                 Constants.playerSpecialCost, Constants.playerRecoverAmount);
     }
 
+    private static Adventure wonFirstFight(Fighter player, String moreInput) {
+        Adventure a = new Adventure(player, new Scanner("3\n1\n1\n" + moreInput));
+        a.playFirstEncounter();
+        return a;
+    }
+
     @Test
     void W01_ATK_01() {
         Fighter enemy = newEnemy(30);
@@ -97,9 +103,9 @@ public class AdventureTest {
     void W02_ENC_01() {
         Fighter p = newPlayer();
 
-        Encounter.Result result = new Encounter(p, newEnemy(30), new Scanner("3\n1\n1\n")).run();
+        Adventure a = wonFirstFight(p, "");
 
-        assertEquals(Encounter.Result.WIN, result);
+        assertEquals(Adventure.State.REWARD_PENDING, a.getState());
         assertEquals(80, p.getHp());
         assertEquals(2, p.getResource());
     }
@@ -107,15 +113,13 @@ public class AdventureTest {
     @Test
     void W02_ENC_02() {
         Fighter p = newPlayer();
-        new Encounter(p, newEnemy(30), new Scanner("3\n1\n1\n")).run();
-        Fighter second = newEnemy(45);
+        Adventure a = wonFirstFight(p, "2\n1\n1\n1\n1\n");
+        a.promptForReward();
 
-        assertEquals(45, second.getHp());
+        a.playSecondEncounter();
 
-        Encounter.Result result = new Encounter(p, second, new Scanner("1\n1\n1\n1\n1\n")).run();
-
-        assertEquals(Encounter.Result.WIN, result);
-        assertEquals(40, p.getHp());
+        assertEquals(Adventure.State.WON, a.getState());
+        assertEquals(50, p.getHp());
     }
 
     @Test
@@ -161,5 +165,115 @@ public class AdventureTest {
         assertEquals(Encounter.Result.WIN, result);
         assertEquals(0, enemy.getHp());
         assertEquals(100, p.getHp());
+    }
+
+    @Test
+    void T1() {
+        Fighter p = newPlayer();
+        newEnemy(30).counterAttack(p);
+
+        Reward.RECOVERY.applyTo(p);
+
+        assertEquals(100, p.getHp());
+        assertEquals(5, p.getResource());
+        assertEquals(10, p.getAttackDamage());
+    }
+
+    @Test
+    void T2() {
+        Fighter p = newPlayer();
+        Adventure a = wonFirstFight(p, "");
+        p.heal(20);
+
+        assertTrue(a.claimReward(Reward.RECOVERY));
+
+        assertEquals(100, p.getHp());
+        assertTrue(a.isRewardClaimed());
+        assertFalse(a.claimReward(Reward.POWER));
+        assertEquals(10, p.getAttackDamage());
+    }
+
+    @Test
+    void T3() {
+        Fighter p = newPlayer();
+        Reward.POWER.applyTo(p);
+        Fighter enemy = newEnemy(45);
+
+        p.attack(enemy);
+
+        assertEquals(12, p.getAttackDamage());
+        assertEquals(15, p.getSpecialDamage());
+        assertEquals(33, enemy.getHp());
+    }
+
+    @Test
+    void T4() {
+        Fighter p = newPlayer();
+        Adventure a = wonFirstFight(p, "7\nabc\n2\n");
+        a.promptForReward();
+
+        assertEquals(80, p.getHp());
+        assertEquals(2, p.getResource());
+        assertEquals(12, p.getAttackDamage());
+        assertEquals(Adventure.State.SECOND_ENCOUNTER, a.getState());
+    }
+
+    @Test
+    void T5() {
+        Fighter p = newPlayer();
+        Adventure a = new Adventure(p, new Scanner(""));
+
+        assertFalse(a.claimReward(Reward.POWER));
+
+        assertFalse(a.isRewardClaimed());
+        assertEquals(100, p.getHp());
+        assertEquals(10, p.getAttackDamage());
+    }
+
+    @Test
+    void T6() {
+        Fighter p = newPlayer();
+        Adventure a = wonFirstFight(p, "");
+
+        assertTrue(a.claimReward(Reward.POWER));
+        assertFalse(a.claimReward(Reward.RECOVERY));
+        assertFalse(a.claimReward(Reward.POWER));
+
+        assertEquals(12, p.getAttackDamage());
+        assertEquals(80, p.getHp());
+        assertEquals(2, p.getResource());
+    }
+
+    @Test
+    void T7() {
+        Fighter p = newPlayer();
+        Adventure a = new Adventure(p, new Scanner("2\n".repeat(20)));
+
+        assertEquals(Adventure.State.LOST, a.run());
+
+        assertFalse(a.isRewardClaimed());
+        assertEquals(0, p.getHp());
+    }
+
+    @Test
+    void T8() {
+        Fighter p = newPlayer();
+        Adventure a = wonFirstFight(p, "1\n");
+        a.promptForReward();
+
+        assertEquals(100, p.getHp());
+        assertEquals(2, p.getResource());
+        assertEquals(10, p.getAttackDamage());
+        assertEquals(Adventure.State.SECOND_ENCOUNTER, a.getState());
+    }
+
+    @Test
+    void T9() {
+        Fighter p = newPlayer();
+        Adventure a = new Adventure(p, new Scanner("3\n1\n1\n2\n1\n1\n1\n1\n"));
+
+        assertEquals(Adventure.State.WON, a.run());
+
+        assertEquals(50, p.getHp());
     }
 }
