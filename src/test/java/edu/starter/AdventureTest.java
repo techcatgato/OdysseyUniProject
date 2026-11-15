@@ -81,4 +81,85 @@ public class AdventureTest {
         assertEquals(100, p.getHp());
         assertEquals(30, enemy.getHp());
     }
+
+    @Test
+    void W02_OBJ_01() {
+        Fighter a = newEnemy(30);
+        Fighter b = newEnemy(45);
+
+        newPlayer().attack(a);
+
+        assertEquals(20, a.getHp());
+        assertEquals(45, b.getHp());
+    }
+
+    @Test
+    void W02_ENC_01() {
+        Fighter p = newPlayer();
+
+        Encounter.Result result = new Encounter(p, newEnemy(30), new Scanner("3\n1\n1\n")).run();
+
+        assertEquals(Encounter.Result.WIN, result);
+        assertEquals(80, p.getHp());
+        assertEquals(2, p.getResource());
+    }
+
+    @Test
+    void W02_ENC_02() {
+        Fighter p = newPlayer();
+        new Encounter(p, newEnemy(30), new Scanner("3\n1\n1\n")).run();
+        Fighter second = newEnemy(45);
+
+        assertEquals(45, second.getHp());
+
+        Encounter.Result result = new Encounter(p, second, new Scanner("1\n1\n1\n1\n1\n")).run();
+
+        assertEquals(Encounter.Result.WIN, result);
+        assertEquals(40, p.getHp());
+    }
+
+    @Test
+    void W02_ENC_03() {
+        Fighter p = newPlayer();
+        p.protect();
+
+        new Encounter(p, newEnemy(45), new Scanner("1\n")).run();
+
+        assertEquals(90, p.getHp());
+    }
+
+    @Test
+    void EDGE_SPECIAL_AT_3() {
+        Fighter p = newPlayerWithResource(3);
+        Fighter enemy = newEnemy(30);
+
+        assertTrue(p.special(enemy));
+
+        assertEquals(0, p.getResource());
+        assertEquals(15, enemy.getHp());
+    }
+
+    @Test
+    void EDGE_SPECIAL_AT_2() {
+        Fighter p = newPlayerWithResource(2);
+        Fighter enemy = newEnemy(30);
+
+        new Encounter(p, enemy, new Scanner("3\n")).run();
+
+        assertEquals(100, p.getHp());
+        assertEquals(2, p.getResource());
+        assertEquals(30, enemy.getHp());
+    }
+
+    @Test
+    void EDGE_ENEMY_AT_5() {
+        Fighter p = newPlayer();
+        Fighter enemy = newEnemy(5);
+
+        Encounter.Result result = new Encounter(p, enemy, new Scanner("1\n")).run();
+
+        assertEquals(Encounter.Result.WIN, result);
+        assertEquals(0, enemy.getHp());
+        assertEquals(100, p.getHp());
+    }
 }
